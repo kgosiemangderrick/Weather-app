@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherWise - Beautiful Weather App</title>
+    
+    <!-- Meta tags -->
+    <meta name="description" content="A beautiful weather application with current conditions and 5-day forecast">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1><i class="fas fa-cloud-sun"></i> WeatherWise</h1>
+            <p>Your personal weather companion</p>
+            <div class="demo-badge" id="demoBadge">
+    <i class="fas fa-info-circle"></i>
+    <span>Demo Mode - Showing sample data</span>
+    <button id="switchToLiveBtn" class="switch-mode-btn">
+        <i class="fas fa-sync-alt"></i> Switch to Live Mode
+    </button>
+</div>
+        </header>
+
+        <!-- API Key Section (shown when no key is saved) -->
+        <section class="api-key-section" id="apiKeySection">
+            <div class="api-card">
+                <!-- <i class="fas fa-key"></i> -->
+                <h3>OpenWeatherMap API Key Required</h3>
+                <p>Get your free API key to see live weather data, or use Demo Mode to see how the app works!</p>
+                
+                <div class="api-tabs">
+                    <button class="api-tab active" id="liveModeTab">Live Mode</button>
+                    <button class="api-tab" id="demoModeTab"> Demo Mode</button>
+                </div>
+                
+                <!-- Live Mode Content -->
+                <div id="liveModeContent" class="api-content active">
+                    <div class="api-steps">
+                        <ol>
+                            <li>Visit <a href="https://openweathermap.org/api" target="_blank">OpenWeatherMap.org</a></li>
+                            <li>Sign up for a free account</li>
+                            <li>Go to your dashboard and copy your API key</li>
+                            <li>Paste it below and click Save</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="api-input-group">
+                        <input type="password" id="apiKeyInput" placeholder="Enter your API key (e.g., 123abc456def...)" />
+                        <button id="saveApiKeyBtn" class="btn-primary">Save API Key</button>
+                    </div>
+                    <button id="tryDemoBtn" class="btn-secondary">Try Demo Mode Instead</button>
+                </div>
+                
+                <!-- Demo Mode Content -->
+                <div id="demoModeContent" class="api-content">
+                    <div class="demo-info">
+                        <i class=" "></i>
+                        <h4>Try Before You Get an API Key!</h4>
+                        <p>Demo mode shows how the app works with sample weather data for:</p>
+                        <div class="demo-cities">
+                            <span class="demo-city" data-city="cape-town">Cape Town</span>
+                            <span class="demo-city" data-city="johannesburg">Johannesburg</span>
+                            <span class="demo-city" data-city="durban">Durban</span>
+                            <span class="demo-city" data-city="london">London</span>
+                            <span class="demo-city" data-city="tokyo">Tokyo</span>
+                            <span class="demo-city" data-city="new-york">New York</span>
+                        </div>
+                        <p class="demo-note">No API key needed - just click a city above to see demo data!</p>
+                        <button id="enableDemoBtn" class="btn-primary">Start Demo Mode</button>
+                    </div>
+                </div>
+                
+                <p class="api-note">
+                    <i class="fas fa-info-circle"></i>
+                    Your API key is stored locally in your browser and never sent to our servers.
+                </p>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section" id="searchSection" style="display: none;">
+            <div class="search-box">
+                <input type="text" id="cityInput" placeholder="Enter city name..." autocomplete="off">
+                <button id="searchBtn" class="btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            <div id="suggestions" class="suggestions"></div>
+            
+            <!-- Demo Mode Quick Picks -->
+            <div class="demo-quick-picks" id="demoQuickPicks">
+                <p>Quick picks:</p>
+                <div class="quick-pick-buttons">
+                    <button class="quick-pick" data-city="Cape Town">Cape Town</button>
+                    <button class="quick-pick" data-city="Johannesburg">Johannesburg</button>
+                    <button class="quick-pick" data-city="Durban">Durban</button>
+                    <button class="quick-pick" data-city="London">London</button>
+                    <button class="quick-pick" data-city="Tokyo">Tokyo</button>
+                    <button class="quick-pick" data-city="New York">New York</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Weather Section -->
+        <section class="weather-section" id="weatherSection" style="display: none;">
+            <div class="current-weather">
+                <div class="weather-header">
+                    <h2 id="cityName"></h2>
+                    <p id="date"></p>
+                    <span class="mode-badge" id="modeBadge"></span>
+                </div>
+                
+                <div class="weather-main">
+                    <div class="weather-icon">
+                        <i id="weatherIcon" class="fas"></i>
+                    </div>
+                    <div class="temperature">
+                        <span id="temp"></span>°C
+                    </div>
+                    <div class="weather-description">
+                        <span id="description"></span>
+                    </div>
+                </div>
+
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <i class="fas fa-temperature-low"></i>
+                        <span>Feels Like</span>
+                        <span id="feelsLike"></span>°C
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-tint"></i>
+                        <span>Humidity</span>
+                        <span id="humidity"></span>%
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-wind"></i>
+                        <span>Wind Speed</span>
+                        <span id="windSpeed"></span> km/h
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-compress-alt"></i>
+                        <span>Pressure</span>
+                        <span id="pressure"></span> hPa
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5-Day Forecast Section -->
+            <div class="forecast-section">
+                <h3><i class="fas fa-calendar-alt"></i> 5-Day Forecast</h3>
+                <div class="forecast-container" id="forecastContainer">
+                    <!-- Forecast cards will be added here dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="spinner">
+            <div class="spinner"></div>
+            <p>Fetching weather data...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText"></span>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 WeatherWise. Made with <i class="fas fa-heart" style="color: #ef4444;"></i> for weather lovers</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
