@@ -21,7 +21,7 @@ Setup
 2. Open index.html in your browser
 3. Choose mode:
    - Demo Mode: Click "Start Demo Mode" to try immediately
-   - Live Mode: Get a free API key from (https://openweathermap.org/api) and enter it
+   - Live Mode: Get a free API key from https://openweathermap.org/api and enter it
 
 How to Use
 
