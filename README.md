@@ -13,7 +13,7 @@ Features
 
 Live Demo
 
-(https://kgosiemangderrick.github.io/weather-app)
+https://kgosiemangderrick.github.io/Weather-app/
 
 Setup
 
